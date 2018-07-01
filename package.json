@@ -7,7 +7,7 @@
     ],
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/ftmazzone/ssd1351.git"
+        "url": "git+https://gitlab.com/ftmazzone/ssd1351.git"
     },
     "dependencies": {
         "freetype2": "^0.3.1",

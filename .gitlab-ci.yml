@@ -4,19 +4,34 @@ cache:
   paths:
   - node_modules/
   
-test:
+stages:
+   - build
+   - test
+   - quality
+   - deploy
+  
+build:
+  stage: build
   script:
    - npm install
+  
+test:
+  script:
    - npm test
   coverage: '/Branches.*?(\d+(?:\.\d+)?)%/'
   artifacts:
     paths:
       - .nyc_output/reports/
 
+quality:
+  stage: quality
+  before_script:
+    - npm install -g sonarqube-scanner
+  script:
+    - sonar-scanner -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+
 pages:
   stage: deploy
-  dependencies:
-    - test
   script:
     - mv .nyc_output/reports/ public/
   artifacts:
