@@ -1,0 +1,27 @@
+image: node:latest
+
+cache:
+  paths:
+  - node_modules/
+  
+test:
+  script:
+   - npm install
+   - npm test
+  coverage: '/Branches.*?(\d+(?:\.\d+)?)%/'
+  artifacts:
+    paths:
+      - .nyc_output/reports/
+
+pages:
+  stage: deploy
+  dependencies:
+    - test
+  script:
+    - mv .nyc_output/reports/ public/
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
+  only:
+    - master

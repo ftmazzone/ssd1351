@@ -1,0 +1,59 @@
+{
+    "version": "0.1.0",
+    "license": "MIT",
+    "name": "ssd1351",
+    "contributors": [
+        "Florent Mazzone"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ftmazzone/ssd1351.git"
+    },
+    "dependencies": {
+        "freetype2": "^0.3.1",
+        "oled-font-5x7": "^1.0.1",
+        "onoff": "^3.1.0",
+        "spi-device": "^2.0.2"
+    },
+    "devDependencies": {
+        "chai": "^4.1.2",
+        "mocha": "^5.2.0",
+        "nyc": "^12.0.0",
+        "rewire": "^4.0.0"
+    },
+    "scripts": {
+        "test": "node ./node_modules/nyc/bin/nyc.js ./node_modules/mocha/bin/_mocha '**/unitTests/*.js'"
+    },
+    "engines": {
+        "node": ">=8.11.0"
+    },
+    "files": [
+        "fonts/",
+        "lib/"
+    ],
+    "main": "./lib",
+    "keywords": [
+        "oled",
+        "spi",
+        "raspberry-pi"
+    ],
+    "nyc": {
+        "exclude": [
+            "node_modules/**",
+            "tests/"
+        ],
+        "check-coverage": true,
+        "all": true,
+        "report-dir": ".nyc_output/reports",
+        "temp-directory": ".nyc_output/",
+        "reporter": [
+            "lcov",
+            "text-summary",
+            "html"
+        ],
+        "statements": 100,
+        "branches": 100,
+        "functions": 100,
+        "lines": 100
+    }
+}
