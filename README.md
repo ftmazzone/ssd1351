@@ -2,7 +2,6 @@
 
 Node.js module for controlling [OLED SSD1351](https://www.newhavendisplay.com/app_notes/SSD1351.pdf) devices. 
 
-[![dependencies Status](https://david-dm.org/ftmazzone/ssd1351/status.svg?style=flat-square)](https://david-dm.org/ftmazzone/ssd1351)
 [![pipeline status](https://gitlab.com/ftmazzone/ssd1351/badges/master/pipeline.svg)](https://gitlab.com/ftmazzone/ssd1351/commits/master)
 [![coverage report](https://gitlab.com/ftmazzone/ssd1351/badges/master/coverage.svg)](https://gitlab.com/ftmazzone/ssd1351/commits/master)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=SSD1351&metric=alert_status&style=flat-square)](https://sonarcloud.io/dashboard?id=SSD1351)
