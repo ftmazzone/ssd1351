@@ -2,12 +2,14 @@
     "version": "0.1.1",
     "license": "MIT",
     "name": "ssd1351",
-    "contributors": [
-        "Florent Mazzone"
-    ],
+    "author": {
+        "name": "Florent Mazzone",
+        "email": "ftmazzone@yahoo.fr"
+    },
+    "contributors": [],
     "repository": {
         "type": "git",
-        "url": "git+https://gitlab.com/ftmazzone/ssd1351.git"
+        "url": "https://gitlab.com/ftmazzone/ssd1351.git"
     },
     "dependencies": {
         "freetype2": "^0.3.1",
