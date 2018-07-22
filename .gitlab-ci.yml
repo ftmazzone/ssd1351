@@ -1,4 +1,4 @@
-image: node:latest
+image: node:8.11.3
 
 cache:
   paths:
@@ -16,8 +16,6 @@ build:
    - npm install
   
 test:
-  before_script:
-   - npm install
   script:
    - npm test
   coverage: '/Branches.*?(\d+(?:\.\d+)?)%/'
