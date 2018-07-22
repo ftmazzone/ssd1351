@@ -1,8 +1,8 @@
-image: node:latest
+image: node:8.11.3
 
 cache:
   paths:
-  #- node_modules/
+   #- node_modules/
   
 stages:
    - build
@@ -16,6 +16,8 @@ build:
    - npm install
   
 test:
+  before_script:
+   - npm install
   script:
    - npm test
   coverage: '/Branches.*?(\d+(?:\.\d+)?)%/'
@@ -58,3 +60,4 @@ pages:
     expire_in: 30 days
   only:
     - master
+    
