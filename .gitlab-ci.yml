@@ -13,6 +13,7 @@ stages:
 build:
   stage: build
   script:
+   - apt-get install libstdc++6
    - npm install
   
 test:
