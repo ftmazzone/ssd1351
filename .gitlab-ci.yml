@@ -13,10 +13,11 @@ stages:
 build:
   stage: build
   script:
-   - apt-get install libstdc++6
    - npm install
   
 test:
+  before_script:
+   - npm install
   script:
    - npm test
   coverage: '/Branches.*?(\d+(?:\.\d+)?)%/'
