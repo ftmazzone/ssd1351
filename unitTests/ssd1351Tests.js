@@ -156,7 +156,6 @@ describe('Ssd1351', function () {
 
             //Act
             ssd1351.drawLine(127, 127, 0, 0);
-            console.log('coucou2');
 
             //Assert
             const bytesData = Ssd1351.__get__("bytesData");
