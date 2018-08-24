@@ -939,7 +939,7 @@ describe('Ssd1351', function () {
             //Assert
             const bytesData = Ssd1351.__get__("bytesData");
             hash.update(new Buffer(bytesData));
-            assert.equal(hash.digest('hex'), '4213523b94abbdf7880c393c29f187bf740e6d97aa94cee90bdf3d069b8daa09');
+            assert.equal(hash.digest('hex'), 'f1be3ef7e9ef24d133e8eb5f90a376b508a97d9f950e25c4ff35e9bd3c46aecd');
         });
 
         it("Check that the pixels are correctly displayed (size 1 & wrap letters)", function () {
