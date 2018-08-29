@@ -19,7 +19,7 @@ test:
   before_script:
    - npm install
   script:
-   - npm test
+   - npm run coverage
   coverage: '/Branches.*?(\d+(?:\.\d+)?)%/'
   artifacts:
     paths:
