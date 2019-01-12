@@ -15,7 +15,7 @@
         "freetype2": "^0.3.1",
         "oled-font-5x7": "^1.0.3",
         "onoff": "^3.2.2",
-        "spi-device": "^2.0.5"
+        "spi-device": "^2.0.6"
     },
     "devDependencies": {
         "chai": "^4.2.0",
