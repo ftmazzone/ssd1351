@@ -14,9 +14,18 @@ async function test() {
         await ssd1351.turnOnDisplay();
         ssd1351.clearDisplay();
 
-        await ssd1351.drawLine(0, 0, 127, 127,Ssd1351.convertHexColourToRgb('#FF530D'));
-        await ssd1351.drawLine(127, 0, 0, 127,Ssd1351.convertHexColourToRgb('#00FF00'));
-        await ssd1351.drawLine(64, 0, 64, 127,Ssd1351.convertHexColourToRgb('#0000FF'));
+        await ssd1351.drawLine(0, 0, 127, 127, Ssd1351.convertHexColourToRgb('#FF530D'));
+        await ssd1351.drawLine(127, 0, 0, 127, Ssd1351.convertHexColourToRgb('#00FF00'));
+        await ssd1351.drawLine(64, 0, 64, 127, Ssd1351.convertHexColourToRgb('#0000FF'));
+        await ssd1351.drawLine(0, 64, 127, 64);
+        await ssd1351.drawLine(0, 0, 127, 127, Ssd1351.convertHexColourToRgb('#FF530D'));
+
+        await ssd1351.turnOffDisplay();
+        await ssd1351.turnOnDisplay();
+
+        await ssd1351.drawLine(0, 0, 127, 127, Ssd1351.convertHexColourToRgb('#FF530D'));
+        await ssd1351.drawLine(127, 0, 0, 127, Ssd1351.convertHexColourToRgb('#00FF00'));
+        await ssd1351.drawLine(64, 0, 64, 127, Ssd1351.convertHexColourToRgb('#0000FF'));
         await ssd1351.drawLine(0, 64, 127, 64);
         await ssd1351.drawLine(0, 0, 127, 127, Ssd1351.convertHexColourToRgb('#FF530D'));
 
@@ -28,7 +37,7 @@ async function test() {
         // ssd1351.setCursor(0, 0);
         // await ssd1351.writeString(oledFont5x7, 4, '14:14', { r: 255, g: 255, b: 255 });
         //ssd1351.clearDisplay();
-         await ssd1351.updateScreen();
+        await ssd1351.updateScreen();
 
         // for (let i = 0; i < 128; i++) {
         //     await ssd1351.setVerticalScroll(i);

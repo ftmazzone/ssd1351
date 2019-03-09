@@ -160,7 +160,7 @@ describe('Ssd1351', function () {
             //Assert
             const bytesData = Ssd1351.__get__("bytesData");
             hash.update(new Buffer(bytesData));
-            assert.equal(hash.digest('hex'), 'c52a63e0fc124d53f5fb1f6e7160a239a88e3a1b302936f34b3961cbab773fc1');
+            assert.equal(hash.digest('hex'), 'e914c89fdd477161ca3719c86ba73a12336942fa13d54ab4b9e5f6185065196d');
         });
 
         it("Check that the pixels are correctly displayed - dx < dy", function () {
@@ -175,7 +175,7 @@ describe('Ssd1351', function () {
             //Assert
             const bytesData = Ssd1351.__get__("bytesData");
             hash.update(new Buffer(bytesData));
-            assert.equal(hash.digest('hex'), 'af5078ba20871eb6047c23527f7c5d7d0ab7218f3460b22f82c93dbeec59583d');
+            assert.equal(hash.digest('hex'), '11a748fe66ff92994c14cee5b58e4cb5853ba14f5561f13b45630faa4e0d2d92');
         });
 
         it("Check that the pixels are correctly displayed - dx > dy", function () {
@@ -190,7 +190,7 @@ describe('Ssd1351', function () {
             //Assert
             const bytesData = Ssd1351.__get__("bytesData");
             hash.update(new Buffer(bytesData));
-            assert.equal(hash.digest('hex'), 'f0674d6990d03b25f0e77f2359973f8422df348378c8ba433ff299d7d41f3b71');
+            assert.equal(hash.digest('hex'), '43257301b12e8138d8bc996b60f70a874a2347fa38eb0f01d1dd03690bf624c0');
         });
 
         it("Check that the pixels are correctly displayed with the correct colour", function () {
@@ -205,7 +205,7 @@ describe('Ssd1351', function () {
             //Assert
             const bytesData = Ssd1351.__get__("bytesData");
             hash.update(new Buffer(bytesData));
-            assert.equal(hash.digest('hex'), 'acd80408e21bb9c7c7a42637e2b9b2b37231fd65e3e51ef80fe90a0c01b9824a');
+            assert.equal(hash.digest('hex'), '66c3c63315d662f29c056bd283a95633ae961ba82826b20b665d46ce5bf8554c');
         });
     });
 
