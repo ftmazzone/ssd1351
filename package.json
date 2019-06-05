@@ -1,5 +1,5 @@
 {
-    "version": "0.1.6",
+    "version": "0.1.7",
     "license": "MIT",
     "name": "ssd1351",
     "author": {
@@ -14,13 +14,13 @@
     "dependencies": {
         "freetype2": "^0.3.1",
         "oled-font-5x7": "^1.0.3",
-        "onoff": "^4.1.0",
-        "spi-device": "^2.0.6"
+        "onoff": "^4.1.1",
+        "spi-device": "^2.0.7"
     },
     "devDependencies": {
         "chai": "^4.2.0",
-        "mocha": "^6.0.2",
-        "nyc": "^13.3.0",
+        "mocha": "^6.1.4",
+        "nyc": "^14.0.0",
         "rewire": "^4.0.0"
     },
     "scripts": {
@@ -28,7 +28,7 @@
         "test": "node ./node_modules/mocha/bin/_mocha '**/unitTests/*.js'"
     },
     "engines": {
-        "node": ">=10.15.3"
+        "node": ">=10.16.0 <11.0.0"
     },
     "files": [
         "fonts/",

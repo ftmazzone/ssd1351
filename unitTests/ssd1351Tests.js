@@ -8,7 +8,7 @@ const Ssd1351 = rewire('../lib/ssd1351');
 
 describe('Ssd1351', function () {
 
-    console.error = () => { };
+    console.error = () => {};
 
     describe("constructor", function () {
         it('Check that parameters are saved', function () {
@@ -49,7 +49,11 @@ describe('Ssd1351', function () {
             const rgbColour = Ssd1351.convertHexColourToRgb('#FF530D');
 
             //Assert
-            assert.deepEqual({ r: 255, g: 83, b: 13 }, rgbColour);
+            assert.deepEqual({
+                r: 255,
+                g: 83,
+                b: 13
+            }, rgbColour);
         });
 
         it("Check that invalid colour conversion is detected", function () {
@@ -124,8 +128,7 @@ describe('Ssd1351', function () {
             //Act
             try {
                 await disconnectSpi();
-            }
-            catch (e) {
+            } catch (e) {
                 //Assert
                 assert.equal(e, 'spi disconnection error');
             }
@@ -200,12 +203,33 @@ describe('Ssd1351', function () {
             const hash = crypto.createHash('sha256');
 
             //Act
-            ssd1351.drawLine(0, 0, 128, 128, { r: 128, g: 128, b: 128 });
+            ssd1351.drawLine(0, 0, 128, 128, {
+                r: 128,
+                g: 128,
+                b: 128
+            });
 
             //Assert
             const bytesData = Ssd1351.__get__("bytesData");
             hash.update(new Buffer(bytesData));
             assert.equal(hash.digest('hex'), '66c3c63315d662f29c056bd283a95633ae961ba82826b20b665d46ce5bf8554c');
+        });
+    });
+
+    describe("drawRectangle", function () {
+        it("Check that the pixels are correctly displayed", function () {
+            //Prepare
+            const ssd1351 = new Ssd1351();
+            ssd1351.clearDisplay();
+            const hash = crypto.createHash('sha256');
+
+            //Act
+            ssd1351.drawRectangle(0, 0, 32, 64);
+
+            //Assert
+            const bytesData = Ssd1351.__get__("bytesData");
+            hash.update(new Buffer(bytesData));
+            assert.equal(hash.digest('hex'), '1750eb99bb9b78eb94d1784e47692c1f6e834ec38c9fe3d202deded690393bfb');
         });
     });
 
@@ -230,7 +254,9 @@ describe('Ssd1351', function () {
             const ssd1351 = new Ssd1351();
 
             //Act
-            const width = ssd1351.getStringWidth({ width: 2 }, 3, 'testString');
+            const width = ssd1351.getStringWidth({
+                width: 2
+            }, 3, 'testString');
 
             //Assert
             assert.equal(width, 70);
@@ -278,8 +304,7 @@ describe('Ssd1351', function () {
             //Act
             try {
                 await initializeSpiConnection();
-            }
-            catch (e) {
+            } catch (e) {
                 //Assert
                 assert.equal(e, 'spi initialization error');
             }
@@ -337,7 +362,8 @@ describe('Ssd1351', function () {
             const ssd1351 = new Ssd1351();
             ssd1351.clearDisplay();
 
-            const dcGpioInputs = [], dataInputs = [];
+            const dcGpioInputs = [],
+                dataInputs = [];
             const oledMock = {
                 transfer: function (message, fct) {
                     dataInputs[dataInputs.length] = message[0];
@@ -363,8 +389,14 @@ describe('Ssd1351', function () {
             assert.equal(dcGpioInputs[1], 1);
 
             assert.equal(2, dataInputs.length);
-            assert.deepEqual({ byteLength: 1, sendBuffer: new Buffer([0xC1]) }, dataInputs[0]);
-            assert.deepEqual({ byteLength: 3, sendBuffer: new Buffer([56, 56, 56]) }, dataInputs[1]);
+            assert.deepEqual({
+                byteLength: 1,
+                sendBuffer: new Buffer([0xC1])
+            }, dataInputs[0]);
+            assert.deepEqual({
+                byteLength: 3,
+                sendBuffer: new Buffer([56, 56, 56])
+            }, dataInputs[1]);
         });
 
         it("Check that the byte array is transmitted to the SPI device - minimum reached", async function () {
@@ -372,7 +404,8 @@ describe('Ssd1351', function () {
             const ssd1351 = new Ssd1351();
             ssd1351.clearDisplay();
 
-            const dcGpioInputs = [], dataInputs = [];
+            const dcGpioInputs = [],
+                dataInputs = [];
             const oledMock = {
                 transfer: function (message, fct) {
                     dataInputs[dataInputs.length] = message[0];
@@ -398,8 +431,14 @@ describe('Ssd1351', function () {
             assert.equal(dcGpioInputs[1], 1);
 
             assert.equal(2, dataInputs.length);
-            assert.deepEqual({ byteLength: 1, sendBuffer: new Buffer([0xC1]) }, dataInputs[0]);
-            assert.deepEqual({ byteLength: 3, sendBuffer: new Buffer([0x00, 0x00, 0x00]) }, dataInputs[1]);
+            assert.deepEqual({
+                byteLength: 1,
+                sendBuffer: new Buffer([0xC1])
+            }, dataInputs[0]);
+            assert.deepEqual({
+                byteLength: 3,
+                sendBuffer: new Buffer([0x00, 0x00, 0x00])
+            }, dataInputs[1]);
         });
 
         it("Check that the byte array is transmitted to the SPI device - maximum reached", async function () {
@@ -407,7 +446,8 @@ describe('Ssd1351', function () {
             const ssd1351 = new Ssd1351();
             ssd1351.clearDisplay();
 
-            const dcGpioInputs = [], dataInputs = [];
+            const dcGpioInputs = [],
+                dataInputs = [];
             const oledMock = {
                 transfer: function (message, fct) {
                     dataInputs[dataInputs.length] = message[0];
@@ -433,8 +473,14 @@ describe('Ssd1351', function () {
             assert.equal(dcGpioInputs[1], 1);
 
             assert.equal(2, dataInputs.length);
-            assert.deepEqual({ byteLength: 1, sendBuffer: new Buffer([0xC1]) }, dataInputs[0]);
-            assert.deepEqual({ byteLength: 3, sendBuffer: new Buffer([0xFF, 0xFF, 0xFF]) }, dataInputs[1]);
+            assert.deepEqual({
+                byteLength: 1,
+                sendBuffer: new Buffer([0xC1])
+            }, dataInputs[0]);
+            assert.deepEqual({
+                byteLength: 3,
+                sendBuffer: new Buffer([0xFF, 0xFF, 0xFF])
+            }, dataInputs[1]);
         });
     });
 
@@ -444,7 +490,8 @@ describe('Ssd1351', function () {
             const ssd1351 = new Ssd1351();
             ssd1351.clearDisplay();
 
-            const dcGpioInputs = [], dataInputs = [];
+            const dcGpioInputs = [],
+                dataInputs = [];
             const oledMock = {
                 transfer: function (message, fct) {
                     dataInputs[dataInputs.length] = message[0];
@@ -470,8 +517,14 @@ describe('Ssd1351', function () {
             assert.equal(dcGpioInputs[1], 1);
 
             assert.equal(2, dataInputs.length);
-            assert.deepEqual({ byteLength: 1, sendBuffer: new Buffer([0xA1]) }, dataInputs[0]);
-            assert.deepEqual({ byteLength: 1, sendBuffer: new Buffer([56]) }, dataInputs[1]);
+            assert.deepEqual({
+                byteLength: 1,
+                sendBuffer: new Buffer([0xA1])
+            }, dataInputs[0]);
+            assert.deepEqual({
+                byteLength: 1,
+                sendBuffer: new Buffer([56])
+            }, dataInputs[1]);
         });
     });
 
@@ -491,10 +544,12 @@ describe('Ssd1351', function () {
             //Act
             try {
                 await sendBytes([0x00, 0xFF]);
-            }
-            catch (e) {
+            } catch (e) {
                 //Assert
-                assert.deepEqual(messageSent, [{ sendBuffer: new Buffer([0x00, 0xFF]), byteLength: 2 }]);
+                assert.deepEqual(messageSent, [{
+                    sendBuffer: new Buffer([0x00, 0xFF]),
+                    byteLength: 2
+                }]);
                 assert.equal(e, 'spi sending error');
             }
         });
@@ -507,8 +562,12 @@ describe('Ssd1351', function () {
             const ssd1351 = new Ssd1351();
             ssd1351.clearDisplay();
 
-            const dcGpioInputs = [], rstGpioInputs = [], dataInputs = [];
-            let dcUnexported = false, rstUnexported = false, oledTurnedOff = false;
+            const dcGpioInputs = [],
+                rstGpioInputs = [],
+                dataInputs = [];
+            let dcUnexported = false,
+                rstUnexported = false,
+                oledTurnedOff = false;
             const oledMock = {
                 transfer: function (message, fct) {
                     dataInputs[dataInputs.length] = message[0];
@@ -560,7 +619,10 @@ describe('Ssd1351', function () {
 
             //Check spi inputs
             assert.equal(1, dataInputs.length);
-            assert.deepEqual({ byteLength: 1, sendBuffer: new Buffer([0xA4]) }, dataInputs[0]);
+            assert.deepEqual({
+                byteLength: 1,
+                sendBuffer: new Buffer([0xA4])
+            }, dataInputs[0]);
 
             //Check oled is turned off
             assert.isTrue(oledTurnedOff);
@@ -582,8 +644,7 @@ describe('Ssd1351', function () {
             //Act
             try {
                 await ssd1351.turnOffDisplay();
-            }
-            catch (e) {
+            } catch (e) {
                 //Assert
                 assert.equal(e, 'Error: rstGpioMock error');
             }
@@ -597,7 +658,9 @@ describe('Ssd1351', function () {
             const ssd1351 = new Ssd1351();
             ssd1351.clearDisplay();
 
-            const dcGpioInputs = [], rstGpioInputs = [], dataInputs = [];
+            const dcGpioInputs = [],
+                rstGpioInputs = [],
+                dataInputs = [];
             const oledMock = {
                 transfer: function (message, fct) {
                     dataInputs[dataInputs.length] = message[0];
@@ -662,7 +725,10 @@ describe('Ssd1351', function () {
             //Check spi inputs
             assert.equal(dataExpectedInputs.length, dataInputs.length);
             for (i = 0; i < dataInputs.length; i++) {
-                assert.deepEqual({ byteLength: dataExpectedInputs[i].length, sendBuffer: new Buffer(dataExpectedInputs[i]) }, dataInputs[i]);
+                assert.deepEqual({
+                    byteLength: dataExpectedInputs[i].length,
+                    sendBuffer: new Buffer(dataExpectedInputs[i])
+                }, dataInputs[i]);
             }
 
             //Check that the bytes array is reset
@@ -677,7 +743,9 @@ describe('Ssd1351', function () {
             const ssd1351 = new Ssd1351();
             ssd1351.clearDisplay();
 
-            const dcGpioInputs = [], rstGpioInputs = [], dataInputs = [];
+            const dcGpioInputs = [],
+                rstGpioInputs = [],
+                dataInputs = [];
 
             const dcGpioMock = {
                 writeSync: function (value) {
@@ -759,7 +827,10 @@ describe('Ssd1351', function () {
             //Check spi inputs
             assert.equal(dataExpectedInputs.length, dataInputs.length);
             for (i = 0; i < dataInputs.length; i++) {
-                assert.deepEqual({ byteLength: dataExpectedInputs[i].length, sendBuffer: new Buffer(dataExpectedInputs[i]) }, dataInputs[i]);
+                assert.deepEqual({
+                    byteLength: dataExpectedInputs[i].length,
+                    sendBuffer: new Buffer(dataExpectedInputs[i])
+                }, dataInputs[i]);
             }
 
             //Check that the bytes array is reset
@@ -783,8 +854,7 @@ describe('Ssd1351', function () {
             //Act
             try {
                 await ssd1351.turnOnDisplay();
-            }
-            catch (e) {
+            } catch (e) {
                 //Assert
                 assert.equal(e, 'Error: rstGpioMock error');
             }
@@ -797,7 +867,8 @@ describe('Ssd1351', function () {
             const ssd1351 = new Ssd1351();
             ssd1351.clearDisplay();
 
-            const dcGpioInputs = [], dataInputs = [];
+            const dcGpioInputs = [],
+                dataInputs = [];
             const oledMock = {
                 transfer: function (message, fct) {
                     const hash = crypto.createHash('sha256');
@@ -833,25 +904,65 @@ describe('Ssd1351', function () {
             assert.equal(dcGpioInputs[5], 1);
 
             assert.equal(13, dataInputs.length);
-            assert.deepEqual({ byteLength: 1, sendBufferHash: '2f0fd1e89b8de1d57292742ec380ea47066e307ad645f5bc3adad8a06ff58608' }, dataInputs[0]);
-            assert.deepEqual({ byteLength: 2, sendBufferHash: 'a4c851fbf3189e47aba2bd90b69036406538b25d92bffbf2ff12267bbea9f023' }, dataInputs[1]);
-            assert.deepEqual({ byteLength: 1, sendBufferHash: '0bfe935e70c321c7ca3afc75ce0d0ca2f98b5422e008bb31c00c6d7f1f1c0ad6' }, dataInputs[2]);
-            assert.deepEqual({ byteLength: 2, sendBufferHash: 'a4c851fbf3189e47aba2bd90b69036406538b25d92bffbf2ff12267bbea9f023' }, dataInputs[3]);
-            assert.deepEqual({ byteLength: 1, sendBufferHash: 'a9253dc8529dd214e5f22397888e78d3390daa47593e26f68c18f97fd7a3876b' }, dataInputs[4]);
-            assert.deepEqual({ byteLength: 4096, sendBufferHash: 'ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7' }, dataInputs[5]);
-            assert.deepEqual({ byteLength: 4096, sendBufferHash: 'ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7' }, dataInputs[6]);
-            assert.deepEqual({ byteLength: 4096, sendBufferHash: 'ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7' }, dataInputs[7]);
-            assert.deepEqual({ byteLength: 4096, sendBufferHash: 'ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7' }, dataInputs[8]);
-            assert.deepEqual({ byteLength: 4096, sendBufferHash: 'ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7' }, dataInputs[9]);
-            assert.deepEqual({ byteLength: 4096, sendBufferHash: 'ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7' }, dataInputs[10]);
-            assert.deepEqual({ byteLength: 4096, sendBufferHash: 'ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7' }, dataInputs[11]);
-            assert.deepEqual({ byteLength: 4096, sendBufferHash: 'ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7' }, dataInputs[12]);
+            assert.deepEqual({
+                byteLength: 1,
+                sendBufferHash: '2f0fd1e89b8de1d57292742ec380ea47066e307ad645f5bc3adad8a06ff58608'
+            }, dataInputs[0]);
+            assert.deepEqual({
+                byteLength: 2,
+                sendBufferHash: 'a4c851fbf3189e47aba2bd90b69036406538b25d92bffbf2ff12267bbea9f023'
+            }, dataInputs[1]);
+            assert.deepEqual({
+                byteLength: 1,
+                sendBufferHash: '0bfe935e70c321c7ca3afc75ce0d0ca2f98b5422e008bb31c00c6d7f1f1c0ad6'
+            }, dataInputs[2]);
+            assert.deepEqual({
+                byteLength: 2,
+                sendBufferHash: 'a4c851fbf3189e47aba2bd90b69036406538b25d92bffbf2ff12267bbea9f023'
+            }, dataInputs[3]);
+            assert.deepEqual({
+                byteLength: 1,
+                sendBufferHash: 'a9253dc8529dd214e5f22397888e78d3390daa47593e26f68c18f97fd7a3876b'
+            }, dataInputs[4]);
+            assert.deepEqual({
+                byteLength: 4096,
+                sendBufferHash: 'ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7'
+            }, dataInputs[5]);
+            assert.deepEqual({
+                byteLength: 4096,
+                sendBufferHash: 'ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7'
+            }, dataInputs[6]);
+            assert.deepEqual({
+                byteLength: 4096,
+                sendBufferHash: 'ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7'
+            }, dataInputs[7]);
+            assert.deepEqual({
+                byteLength: 4096,
+                sendBufferHash: 'ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7'
+            }, dataInputs[8]);
+            assert.deepEqual({
+                byteLength: 4096,
+                sendBufferHash: 'ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7'
+            }, dataInputs[9]);
+            assert.deepEqual({
+                byteLength: 4096,
+                sendBufferHash: 'ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7'
+            }, dataInputs[10]);
+            assert.deepEqual({
+                byteLength: 4096,
+                sendBufferHash: 'ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7'
+            }, dataInputs[11]);
+            assert.deepEqual({
+                byteLength: 4096,
+                sendBufferHash: 'ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7'
+            }, dataInputs[12]);
         });
 
         it("Check that not byte array is transmitted to the SPI device if the array is empty", async function () {
             //Prepare 
             const ssd1351 = new Ssd1351();
-            const dcGpioInputs = [], dataInputs = [];
+            const dcGpioInputs = [],
+                dataInputs = [];
             const oledMock = {
                 transfer: function (message, fct) {
                     const hash = crypto.createHash('sha256');
@@ -888,11 +999,26 @@ describe('Ssd1351', function () {
             assert.equal(dcGpioInputs[5], 1);
 
             assert.equal(5, dataInputs.length);
-            assert.deepEqual({ byteLength: 1, sendBufferHash: '2f0fd1e89b8de1d57292742ec380ea47066e307ad645f5bc3adad8a06ff58608' }, dataInputs[0]);
-            assert.deepEqual({ byteLength: 2, sendBufferHash: 'a4c851fbf3189e47aba2bd90b69036406538b25d92bffbf2ff12267bbea9f023' }, dataInputs[1]);
-            assert.deepEqual({ byteLength: 1, sendBufferHash: '0bfe935e70c321c7ca3afc75ce0d0ca2f98b5422e008bb31c00c6d7f1f1c0ad6' }, dataInputs[2]);
-            assert.deepEqual({ byteLength: 2, sendBufferHash: 'a4c851fbf3189e47aba2bd90b69036406538b25d92bffbf2ff12267bbea9f023' }, dataInputs[3]);
-            assert.deepEqual({ byteLength: 1, sendBufferHash: 'a9253dc8529dd214e5f22397888e78d3390daa47593e26f68c18f97fd7a3876b' }, dataInputs[4]);
+            assert.deepEqual({
+                byteLength: 1,
+                sendBufferHash: '2f0fd1e89b8de1d57292742ec380ea47066e307ad645f5bc3adad8a06ff58608'
+            }, dataInputs[0]);
+            assert.deepEqual({
+                byteLength: 2,
+                sendBufferHash: 'a4c851fbf3189e47aba2bd90b69036406538b25d92bffbf2ff12267bbea9f023'
+            }, dataInputs[1]);
+            assert.deepEqual({
+                byteLength: 1,
+                sendBufferHash: '0bfe935e70c321c7ca3afc75ce0d0ca2f98b5422e008bb31c00c6d7f1f1c0ad6'
+            }, dataInputs[2]);
+            assert.deepEqual({
+                byteLength: 2,
+                sendBufferHash: 'a4c851fbf3189e47aba2bd90b69036406538b25d92bffbf2ff12267bbea9f023'
+            }, dataInputs[3]);
+            assert.deepEqual({
+                byteLength: 1,
+                sendBufferHash: 'a9253dc8529dd214e5f22397888e78d3390daa47593e26f68c18f97fd7a3876b'
+            }, dataInputs[4]);
         });
     });
 
@@ -934,7 +1060,11 @@ describe('Ssd1351', function () {
             const hash = crypto.createHash('sha256');
 
             //Act
-            ssd1351.writeString(oledFont5x7, 1, '14:10 14:11 14:12 14:13 14:14', { r: 255, g: 255, b: 255 }, true);
+            ssd1351.writeString(oledFont5x7, 1, '14:10 14:11 14:12 14:13 14:14', {
+                r: 255,
+                g: 255,
+                b: 255
+            }, true);
 
             //Assert
             const bytesData = Ssd1351.__get__("bytesData");
@@ -949,7 +1079,11 @@ describe('Ssd1351', function () {
             const hash = crypto.createHash('sha256');
 
             //Act
-            ssd1351.writeString(oledFont5x7, 1, '14:1014:1114:1214:1314:1414:1514:1614:17', { r: 255, g: 255, b: 255 }, true);
+            ssd1351.writeString(oledFont5x7, 1, '14:1014:1114:1214:1314:1414:1514:1614:17', {
+                r: 255,
+                g: 255,
+                b: 255
+            }, true);
 
             //Assert
             const bytesData = Ssd1351.__get__("bytesData");
@@ -979,21 +1113,52 @@ describe('Ssd1351', function () {
             const hash = crypto.createHash('sha256');
 
             //Act
-            ssd1351.writeString(oledFont5x7, 4, '14:14', { r: 128, g: 128, b: 128 });
+            ssd1351.writeString(oledFont5x7, 4, '14:14', {
+                r: 128,
+                g: 128,
+                b: 128
+            });
 
             //Assert
             const bytesData = Ssd1351.__get__("bytesData");
             hash.update(new Buffer(bytesData));
             assert.equal(hash.digest('hex'), '72a54c608e666dd76913e83efa5d3431a33ae3de9310d815b4c45cf380a0d5e6');
         });
+
+        it("Check that the pixels are displayed with the correct font and background colours", function () {
+            //Prepare
+            const ssd1351 = new Ssd1351();
+            ssd1351.clearDisplay();
+            const hash = crypto.createHash('sha256');
+            const colour = {
+                r: 255,
+                g: 255,
+                b: 255
+            };
+            const backgroundColour = {
+                r: 128,
+                g: 128,
+                b: 128
+            };
+
+            //Act
+            ssd1351.writeString(oledFont5x7, 1, '14:14', colour, undefined, undefined, backgroundColour);
+
+            //Assert
+            const bytesData = Ssd1351.__get__("bytesData");
+            hash.update(new Buffer(bytesData));
+            assert.equal(hash.digest('hex'), 'cb50c201dddd94d5e2b73ec96770ee4108feeec01bc5ddc449a394f0d14e319f');
+        });
     });
 
     describe("writeOutlineString", function () {
         const robotoFontConverter = new FontConverter(path.join(__dirname,
-            '../fonts/Roboto-Regular.ttf'),
-            {
-                charWidth: 0, charHeight: 15 * 64, horzResolution: 128, vertResolution: 128
-            });
+            '../fonts/Roboto-Regular.ttf'), {
+            charWidth: 0,
+            charHeight: 15 * 64,
+            horzResolution: 128,
+            vertResolution: 128
+        });
 
         it("Check that the pixels are correctly displayed (size 1) - default colour", function () {
             //Prepare
@@ -1050,7 +1215,10 @@ describe('Ssd1351', function () {
             const size = ssd1351.writeOutlineString('14:14', robotoFontConverter, 5, Ssd1351.convertHexColourToRgb('#FF530D'), false);
 
             //Assert
-            assert.deepEqual(size, { height: 19, width: 14 });
+            assert.deepEqual(size, {
+                height: 19,
+                width: 14
+            });
             const bytesData = Ssd1351.__get__("bytesData");
             hash.update(new Buffer(bytesData));
             assert.equal(hash.digest('hex'), 'c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479');
