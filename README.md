@@ -149,12 +149,12 @@ await ssd1351.writeString(oledFont5x7, 4, '12:12', { r: 255, g: 255, b: 255 }); 
 
 ### writeString
 
-Writes the specified string given in parameter at the current cursor position.  
+Writes the specified string given in parameter at the current cursor position. The parameters colour,wrap, padding and background colour are optional.
 __Remark__ : This method only writes the string in the application buffer. Use [updateScreen](#updatescreen) to update the oled display content.
 
 Usage:
 ```javascript
-await ssd1351.writeString(oledFont5x7, 4, '12:12', { r: 255, g: 255, b: 255 }); // Writes in white the string 12:12 with the pixel font 'oledFont5x7', the character size '4'
+await ssd1351.writeString(oledFont5x7, 4, '12:12', { r: 255, g: 255, b: 255 },undefined,undefined,{ r: 128, g: 128 , b: 128 }); // Writes in white the string 12:12 with the pixel font 'oledFont5x7', the character size '4'.
 ```
 
 ### writeOutlineString
