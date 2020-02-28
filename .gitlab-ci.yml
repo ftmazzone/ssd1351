@@ -1,4 +1,4 @@
-image: node:10
+image: node:lts
 
 cache:
   paths:
@@ -13,11 +13,11 @@ stages:
 build:
   stage: build
   script:
-   - npm install
+   - npm ci
   
 test:
   before_script:
-   - npm install
+   - npm ci
   script:
    - npm run coverage
   coverage: '/Branches.*?(\d+(?:\.\d+)?)%/'
