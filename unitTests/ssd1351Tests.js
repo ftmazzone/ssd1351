@@ -1,14 +1,17 @@
+"use strict";
+
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const assert = require('chai').assert;
 const rewire = require("rewire");
+const { createCanvas } = require('canvas');
 const oledFont5x7 = require('oled-font-5x7');
 const Ssd1351 = rewire('../lib/ssd1351');
 
 describe('Ssd1351', function () {
 
-    console.error = () => {};
+    console.error = () => { };
 
     describe("constructor", function () {
         it('Check that parameters are saved', function () {
@@ -30,7 +33,7 @@ describe('Ssd1351', function () {
             for (i = 0; i < 128 * 128 * 2; i++) {
                 bytesBuffer[i] = i % 256;
             }
-            ssd1351.setRawData(bytesBuffer);
+            ssd1351.RawData = bytesBuffer;
             const hash = crypto.createHash('sha256');
 
             //Act
@@ -325,15 +328,18 @@ describe('Ssd1351', function () {
         });
     });
 
-    describe("setRawData", function () {
+    describe("RawData", function () {
         it("Check that array size is checked", function () {
             assert.throws(function () {
                 //Arrange
                 const ssd1351 = new Ssd1351();
+                const rawData = [200 * 200 * 2];
 
                 //Act
-                ssd1351.setRawData([200 * 200 * 2]);
-            });
+                ssd1351.RawData = rawData;
+
+                //Assert
+            }, Error, '');
         });
 
         it("Check that array is saved", function () {
@@ -346,10 +352,10 @@ describe('Ssd1351', function () {
             }
 
             //Act
-            ssd1351.setRawData(bytesBuffer);
+            ssd1351.RawData = bytesBuffer;
 
             //Assert
-            const bytesData = Ssd1351.__get__("bytesData");
+            const bytesData = ssd1351.RawData;
             assert.equal(5, bytesData[5]);
             assert.equal(255, bytesData[255]);
             assert.equal(0, bytesData[256]);
@@ -398,8 +404,83 @@ describe('Ssd1351', function () {
                 sendBuffer: new Buffer([56, 56, 56])
             }, dataInputs[1]);
         });
+    });
 
-        it("Check that the byte array is transmitted to the SPI device - minimum reached", async function () {
+    describe("drawCanvas", function () {
+        it("Check that the image is correcly converted into a bytes array (endianess 'LE')", function () {
+            //Prepare 
+            const hash = crypto.createHash('sha256');
+            Ssd1351.__set__('osEndianess', 'LE');
+            const ssd1351 = new Ssd1351();
+            ssd1351.clearDisplay();
+
+            const canvas = createCanvas(128, 128);
+            const ctx = canvas.getContext('2d', { pixelFormat: 'RGB16_565' });
+
+            const textToDisplay = "myDisplayedText";
+            const textMeasures = ctx.measureText(textToDisplay);
+            ctx.fillText(textToDisplay, 0, textMeasures.actualBoundingBoxAscent);
+
+            //Act
+            ssd1351.drawCanvas(ctx)
+
+            //Assert
+            hash.update(new Buffer(ssd1351.RawData));
+            assert.equal(hash.digest('hex'), 'c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479');
+        });
+
+        it("Check that the image is correcly converted into a bytes array (endianess 'BE')", function () {
+            //Prepare 
+            const hash = crypto.createHash('sha256');
+            Ssd1351.__set__('osEndianess', 'BE');
+            const ssd1351 = new Ssd1351();
+            ssd1351.clearDisplay();
+
+            const canvas = createCanvas(128, 128);
+            const ctx = canvas.getContext('2d', { pixelFormat: 'RGB16_565' });
+
+            const textToDisplay = "myDisplayedText";
+            const textMeasures = ctx.measureText(textToDisplay);
+            ctx.fillText(textToDisplay, 0, textMeasures.actualBoundingBoxAscent);
+
+            //Act
+            ssd1351.drawCanvas(ctx)
+
+            //Assert
+            hash.update(new Buffer(ssd1351.RawData));
+            assert.equal(hash.digest('hex'), 'c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479');
+        });
+
+        it("Check that the type of the canvas context parameter is correct", function () {
+            assert.throws(function () {
+                //Prepare
+                const ssd1351 = new Ssd1351();
+
+                //Act
+                ssd1351.drawCanvas({});
+            }, Error, 'drawCanvas the type of the object canvasContext is incorrect');
+        });
+
+        it("Check that the pixel type of the canvas context parameter is correct", function () {
+            assert.throws(function () {
+                //Prepare
+                const ssd1351 = new Ssd1351();
+
+                const canvas = createCanvas(128, 128);
+                const ctx = canvas.getContext('2d');
+
+                const textToDisplay = "myDisplayedText";
+                const textMeasures = ctx.measureText(textToDisplay);
+                ctx.fillText(textToDisplay, 0, textMeasures.actualBoundingBoxAscent);
+
+                //Act
+                ssd1351.drawCanvas(ctx);
+            }, Error, "drawCanvas the pixel format 'RGBA32' of the object canvasContext should be 'RGB16_565'.");
+        });
+    });
+
+    describe("setContrast", function () {
+        it("Check that the byte array is transmitted to the SPI device", async function () {
             //Prepare 
             const ssd1351 = new Ssd1351();
             ssd1351.clearDisplay();
@@ -421,6 +502,51 @@ describe('Ssd1351', function () {
 
             Ssd1351.__set__("oled", oledMock);
             Ssd1351.__set__("dcGpio", dcGpioMock);
+
+            //Act
+            await ssd1351.setContrast(56);
+
+            //Assert
+            assert.equal(2, dcGpioInputs.length);
+            assert.equal(dcGpioInputs[0], 0);
+            assert.equal(dcGpioInputs[1], 1);
+
+            assert.equal(2, dataInputs.length);
+            assert.deepEqual({
+                byteLength: 1,
+                sendBuffer: new Buffer([0xC1])
+            }, dataInputs[0]);
+            assert.deepEqual({
+                byteLength: 3,
+                sendBuffer: new Buffer([56, 56, 56])
+            }, dataInputs[1]);
+        });
+
+        it("Check that the byte array is transmitted to the SPI device - minimum reached", async function () {
+            //Prepare 
+            let warningMessage;
+            const ssd1351 = new Ssd1351();
+            ssd1351.clearDisplay();
+
+            const dcGpioInputs = [],
+                dataInputs = [];
+            const oledMock = {
+                transfer: function (message, fct) {
+                    dataInputs[dataInputs.length] = message[0];
+                    fct(null, "success");
+                }
+            };
+
+            const dcGpioMock = {
+                writeSync: function (value) {
+                    dcGpioInputs[dcGpioInputs.length] = value;
+                }
+            };
+
+            Ssd1351.__set__("oled", oledMock);
+            Ssd1351.__set__("dcGpio", dcGpioMock);
+
+            console.warn = message => warningMessage = message;
 
             //Act
             await ssd1351.setContrast(-5);
@@ -439,10 +565,12 @@ describe('Ssd1351', function () {
                 byteLength: 3,
                 sendBuffer: new Buffer([0x00, 0x00, 0x00])
             }, dataInputs[1]);
+            assert.equal(warningMessage, 'Contrast value 0 is too low. Minimum value is 0.');
         });
 
         it("Check that the byte array is transmitted to the SPI device - maximum reached", async function () {
             //Prepare 
+            let warningMessage;
             const ssd1351 = new Ssd1351();
             ssd1351.clearDisplay();
 
@@ -464,6 +592,8 @@ describe('Ssd1351', function () {
             Ssd1351.__set__("oled", oledMock);
             Ssd1351.__set__("dcGpio", dcGpioMock);
 
+            console.warn = message => warningMessage = message;
+
             //Act
             await ssd1351.setContrast(1000);
 
@@ -481,12 +611,13 @@ describe('Ssd1351', function () {
                 byteLength: 3,
                 sendBuffer: new Buffer([0xFF, 0xFF, 0xFF])
             }, dataInputs[1]);
+            assert.equal(warningMessage, 'Contrast value 255 is too high. Maximum value is 0xFF.');
         });
     });
 
     describe("setVerticalScroll", function () {
         it("Check that the byte array is transmitted to the SPI device", async function () {
-            //Prepare 
+            //Prepare
             const ssd1351 = new Ssd1351();
             ssd1351.clearDisplay();
 
@@ -704,7 +835,8 @@ describe('Ssd1351', function () {
                 [0xB6], [0x01],
                 [0xC1], [0xFF, 0xFF, 0xFF],
                 [0xAF],
-                [0xA6]];
+                [0xA6],
+                [0xA1], [0x00]];
 
             //Act
             await ssd1351.turnOnDisplay();
@@ -716,7 +848,7 @@ describe('Ssd1351', function () {
             assert.equal(rstGpioInputs[1], 1);
 
             //Check dc
-            assert.equal(40, dcGpioInputs.length);
+            assert.equal(dcGpioInputs.length, 42);
             let i = 0;
             for (i = 0; i < dcGpioInputs.length; i++) {
                 assert.equal(dcGpioInputs[i], i % 2);
@@ -806,7 +938,8 @@ describe('Ssd1351', function () {
                 [0xB6], [0x01],
                 [0xC1], [0xFF, 0xFF, 0xFF],
                 [0xAF],
-                [0xA6]];
+                [0xA6],
+                [0xA1], [0x00]];
 
             //Act
             await ssd1351.turnOnDisplay();
@@ -818,7 +951,7 @@ describe('Ssd1351', function () {
             assert.equal(rstGpioInputs[1], 1);
 
             //Check dc
-            assert.equal(40, dcGpioInputs.length);
+            assert.equal(dataInputs.length, 39);
             let i = 0;
             for (i = 0; i < dcGpioInputs.length; i++) {
                 assert.equal(dcGpioInputs[i], i % 2);
@@ -1148,80 +1281,6 @@ describe('Ssd1351', function () {
             const bytesData = Ssd1351.__get__("bytesData");
             hash.update(new Buffer(bytesData));
             assert.equal(hash.digest('hex'), 'cb50c201dddd94d5e2b73ec96770ee4108feeec01bc5ddc449a394f0d14e319f');
-        });
-    });
-
-    describe("writeOutlineString", function () {
-        const robotoFontConverter = new FontConverter(path.join(__dirname,
-            '../fonts/Roboto-Regular.ttf'), {
-            charWidth: 0,
-            charHeight: 15 * 64,
-            horzResolution: 128,
-            vertResolution: 128
-        });
-
-        it("Check that the pixels are correctly displayed (size 1) - default colour", function () {
-            //Prepare
-            const ssd1351 = new Ssd1351();
-            ssd1351.clearDisplay();
-            const hash = crypto.createHash('sha256');
-
-            //Act
-            ssd1351.writeOutlineString('14:14', robotoFontConverter, 5);
-
-            //Assert
-            const bytesData = Ssd1351.__get__("bytesData");
-            hash.update(new Buffer(bytesData));
-            assert.equal(hash.digest('hex'), '2995005a50ec9461c72bbc70f820034d7c48673750b663dd14b8ed167b620882');
-        });
-
-        it("Check that the pixels are correctly displayed (size 1) - default spacing", function () {
-            //Prepare
-            const ssd1351 = new Ssd1351();
-            ssd1351.clearDisplay();
-            const hash = crypto.createHash('sha256');
-
-            //Act
-            ssd1351.writeOutlineString('14:14', robotoFontConverter);
-
-            //Assert
-            const bytesData = Ssd1351.__get__("bytesData");
-            hash.update(new Buffer(bytesData));
-            assert.equal(hash.digest('hex'), 'dfca4873bdd117dd0a1b78055d2bb660bda4fa1de43027e18253efd980d6e958');
-        });
-
-        it("Check that the pixels are correctly displayed (size 1)", function () {
-            //Prepare
-            const ssd1351 = new Ssd1351();
-            ssd1351.clearDisplay();
-            const hash = crypto.createHash('sha256');
-
-            //Act
-            ssd1351.writeOutlineString('14:14', robotoFontConverter, 5, Ssd1351.convertHexColourToRgb('#FF530D'));
-
-            //Assert
-            const bytesData = Ssd1351.__get__("bytesData");
-            hash.update(new Buffer(bytesData));
-            assert.equal(hash.digest('hex'), '41d591c8c3f6b471f3a5f7156f80dd8c2e365bb52226c38a291a38fd6774ea43');
-        });
-
-        it("Check that the size of the string is calculated if draw is disabled", function () {
-            //Prepare
-            const ssd1351 = new Ssd1351();
-            ssd1351.clearDisplay();
-            const hash = crypto.createHash('sha256');
-
-            //Act
-            const size = ssd1351.writeOutlineString('14:14', robotoFontConverter, 5, Ssd1351.convertHexColourToRgb('#FF530D'), false);
-
-            //Assert
-            assert.deepEqual(size, {
-                height: 19,
-                width: 14
-            });
-            const bytesData = Ssd1351.__get__("bytesData");
-            hash.update(new Buffer(bytesData));
-            assert.equal(hash.digest('hex'), 'c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479');
         });
     });
 });
