@@ -1171,14 +1171,14 @@ describe('Ssd1351', function () {
             assert.equal(hash.digest('hex'), '03d7a8158c0645e715257edee4609884dcc025a4a4364e1edbc39d57308c3ef2');
         });
 
-        it("Check that the pixels are correctly displayed (size 1 & new line)", function () {
+        it("Check that the pixels are correctly displayed (size 1 & new line & default font)", function () {
             //Prepare
             const ssd1351 = new Ssd1351();
             ssd1351.clearDisplay();
             const hash = crypto.createHash('sha256');
 
             //Act
-            ssd1351.writeString(oledFont5x7, 1, '14:14\n14:14');
+            ssd1351.writeString(undefined, 1, '14:14\n14:14');
 
             //Assert
             const bytesData = Ssd1351.__get__("bytesData");
