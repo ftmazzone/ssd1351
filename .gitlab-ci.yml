@@ -2,7 +2,12 @@ image: node:lts
 
 cache:
   paths:
-   # - node_modules/
+   - node_modules/
+   - .nyc_output/
+
+variables:
+  SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+  GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
   
 stages:
    - build
@@ -16,21 +21,31 @@ build:
    - npm ci
   
 test:
-  before_script:
-   - npm ci
+  dependencies:
+   - build
   script:
    - npm run coverage
   coverage: '/Branches.*?(\d+(?:\.\d+)?)%/'
   artifacts:
     paths:
       - .nyc_output/reports/
-
+      
 quality:
   stage: quality
-  before_script:
-    - npm install -g sonarqube-scanner
+  dependencies:
+    - test
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+     - .sonar/cache
   script:
-    - sonar-scanner -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+     - sonar-scanner
+  only:
+     - master
+     - merge_requests
 
 pages:
   stage: deploy
@@ -42,4 +57,3 @@ pages:
     expire_in: 30 days
   only:
     - master
-    
