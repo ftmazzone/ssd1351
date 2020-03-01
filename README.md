@@ -4,7 +4,7 @@ Node.js module for controlling [OLED SSD1351](https://www.newhavendisplay.com/ap
 
 [![pipeline status](https://gitlab.com/ftmazzone/ssd1351/badges/master/pipeline.svg)](https://gitlab.com/ftmazzone/ssd1351/commits/master)
 [![coverage report](https://gitlab.com/ftmazzone/ssd1351/badges/master/coverage.svg)](https://gitlab.com/ftmazzone/ssd1351/commits/master)
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=SSD1351&metric=alert_status&style=flat-square)](https://sonarcloud.io/dashboard?id=SSD1351)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=ftmazzone_ssd1351&metric=alert_status&style=flat-square)](https://sonarcloud.io/dashboard?id=ftmazzone_ssd1351)
 
 ## Prerequisites
 ### Wiring
