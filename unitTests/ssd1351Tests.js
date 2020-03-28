@@ -40,9 +40,30 @@ describe('Ssd1351', function () {
             ssd1351.clearDisplay();
 
             //Assert
-            const bytesData = Ssd1351.__get__("bytesData");
+            const bytesData = ssd1351.RawData;
             hash.update(new Buffer(bytesData));
             assert.equal(hash.digest('hex'), 'c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479');
+            assert.equal(bytesData, bytesBuffer);
+        });
+
+        it('Check that that array of bytes is reset - RawData size incorrect', function () {
+            //Arrange
+            const ssd1351 = new Ssd1351();
+            const bytesBuffer = ssd1351.RawData;
+            let i = 0;
+            for (i = 0; i < 130 * 130 * 2; i++) {
+                bytesBuffer[i] = i % 256;
+            }
+            const hash = crypto.createHash('sha256');
+
+            //Act
+            ssd1351.clearDisplay();
+
+            //Assert
+            const bytesData = ssd1351.RawData;
+            hash.update(new Buffer(bytesData));
+            assert.equal(hash.digest('hex'), 'c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479');
+            assert.notEqual(bytesData, bytesBuffer);
         });
     });
 
