@@ -1175,6 +1175,45 @@ describe('Ssd1351', function () {
             }, dataInputs[4]);
         });
 
+        it("Check that the exception is catched", async function () {
+            //Prepare 
+            let errorMessage, exceptionMessage;
+            const ssd1351 = new Ssd1351();
+            ssd1351.clearDisplay();
+
+            const dcGpioInputs = [];
+            const oledMock = {       };
+
+            const writeSyncError = new Error('myUpdateScreenException');
+
+            const dcGpioMock = {
+                writeSync: function (value) {
+                    dcGpioInputs[dcGpioInputs.length] = value;
+                    throw writeSyncError;
+                }
+            };
+
+            Ssd1351.__set__("oled", oledMock);
+            Ssd1351.__set__("dcGpio", dcGpioMock);
+
+            console.error = message => errorMessage = message;
+
+            //Act
+            try {
+                await ssd1351.updateScreen();
+            }
+            catch (err) {
+                exceptionMessage = err.message;
+            }
+
+            //Assert
+            assert.equal(1, dcGpioInputs.length);
+            assert.deepEqual(dcGpioInputs, [0]);
+            assert.equal(exceptionMessage, 'myUpdateScreenException');
+            assert.equal(errorMessage, 'updateScreen error');
+            assert.isFalse(Ssd1351.__get__('updateScreenInProgress'));
+        });
+
         it("Check that not byte array is transmitted to the SPI device if the screen is currently being updated", async function () {
             //Prepare 
             const ssd1351 = new Ssd1351();
@@ -1186,7 +1225,6 @@ describe('Ssd1351', function () {
 
             //Assert
             assert.isFalse(result);
-
         });
     });
 
