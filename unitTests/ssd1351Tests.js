@@ -1174,6 +1174,20 @@ describe('Ssd1351', function () {
                 sendBufferHash: 'a9253dc8529dd214e5f22397888e78d3390daa47593e26f68c18f97fd7a3876b'
             }, dataInputs[4]);
         });
+
+        it("Check that not byte array is transmitted to the SPI device if the screen is currently being updated", async function () {
+            //Prepare 
+            const ssd1351 = new Ssd1351();
+            Ssd1351.__set__('updateScreenInProgress', true);
+
+            //Act
+            const result = await ssd1351.updateScreen();
+            Ssd1351.__set__('updateScreenInProgress', false);
+
+            //Assert
+            assert.isFalse(result);
+
+        });
     });
 
     describe("writeString", function () {
