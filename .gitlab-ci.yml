@@ -18,12 +18,16 @@ stages:
 build:
   stage: build
   script:
+   - apt-get update
+   - apt-get -y install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
    - npm ci
   
 test:
   dependencies:
    - build
   script:
+   - apt-get update
+   - apt-get -y install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
    - npm run coverage
   coverage: '/Branches.*?(\d+(?:\.\d+)?)%/'
   artifacts:
