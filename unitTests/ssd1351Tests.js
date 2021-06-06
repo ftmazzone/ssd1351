@@ -253,10 +253,61 @@ describe('Ssd1351', function () {
             //Assert
             const bytesData = Ssd1351.__get__("bytesData");
             hash.update(new Buffer(bytesData));
+            assert.equal(hash.digest('hex'), '6be4533cf67ff68b30bb992c0ab21577b884af42db267649a1d5543eb572e26a');
+        });
+    });
+
+    describe("fillRectangle", function () {
+        it("Check that the pixels are correctly displayed", function () {
+            //Prepare
+            const ssd1351 = new Ssd1351();
+            ssd1351.clearDisplay();
+            const hash = crypto.createHash('sha256');
+
+            //Act
+            ssd1351.fillRectangle(0, 0, 32, 64);
+
+            //Assert
+            const bytesData = Ssd1351.__get__("bytesData");
+            hash.update(new Buffer(bytesData));
             assert.equal(hash.digest('hex'), '1750eb99bb9b78eb94d1784e47692c1f6e834ec38c9fe3d202deded690393bfb');
         });
     });
 
+    describe("drawCircle", function () {
+        it("Check that the pixels are correctly displayed", function () {
+            //Prepare
+            const ssd1351 = new Ssd1351();
+            ssd1351.clearDisplay();
+            const hash = crypto.createHash('sha256');
+
+            //Act
+            ssd1351.drawCircle(32, 32, 10);
+
+            //Assert
+            const bytesData = Ssd1351.__get__("bytesData");
+            hash.update(new Buffer(bytesData));
+            assert.equal(hash.digest('hex'), '504902f8b7667c24c4cbe802ea26f178fa84a317b00d535a977fdfcb09b253dd');
+        });
+    });
+
+    describe("fillCircle", function () {
+        it("Check that the pixels are correctly displayed", function () {
+            //Prepare
+            const ssd1351 = new Ssd1351();
+            ssd1351.clearDisplay();
+            const hash = crypto.createHash('sha256');
+
+            //Act
+            ssd1351.fillCircle(48, 48, 12);
+
+            //Assert
+            const bytesData = Ssd1351.__get__("bytesData");
+            hash.update(new Buffer(bytesData));
+            assert.equal(hash.digest('hex'), '7589ef3e51ec0e31e73de824d80ee63ecedcd34006ba9a80dc27217534392758');
+        });
+    });
+    
     describe("getCursor", function () {
         it('Check that the correct cursor position is given', function () {
             //Prepare
@@ -1227,7 +1278,59 @@ describe('Ssd1351', function () {
             assert.isFalse(result);
         });
     });
+    
+    describe("drawChar", function () {
+        it("Check drawChar with real font height (character height is 7 from oledFont5x7)", function () {
+            const ssd1351 = new Ssd1351();
+            ssd1351.clearDisplay();
+            const hash = crypto.createHash('sha256');
+            ssd1351.setCursor(0,0);
+            const findCharBuf = Ssd1351.__get__("findCharBuf");
+            const readCharBytes = Ssd1351.__get__("readCharBytes");
+            const drawChar = Ssd1351.__get__("drawChar");
 
+            const charBuf = findCharBuf(oledFont5x7,'A');
+            const charHeight = oledFont5x7.height;
+            const charBytes = readCharBytes(charBuf, charHeight);
+            const size = 1;
+            const colour = {r:255,g:255,b:255};
+            const backgroundColour = {r:0,g:0,b:0};
+
+            drawChar(charBytes, charHeight, size, colour, backgroundColour);
+            
+            //Assert
+            const bytesData = Ssd1351.__get__("bytesData");
+            hash.update(new Buffer(bytesData));
+            assert.equal(hash.digest('hex'), '1b6173e54b1d4857a5afe4a470fb0222e87a6c078f3813041f00dffa16c52728');
+        });
+
+        it("Check drawChar with undefined font height (character height is 8)", function () {
+            const ssd1351 = new Ssd1351();
+            ssd1351.clearDisplay();
+            const hash = crypto.createHash('sha256');
+            ssd1351.setCursor(0,0);
+            const findCharBuf = Ssd1351.__get__("findCharBuf");
+            const readCharBytes = Ssd1351.__get__("readCharBytes");
+            const drawChar = Ssd1351.__get__("drawChar");
+
+            const charBuf = findCharBuf(oledFont5x7,'A');
+            const charHeight = undefined;
+            // As charHeight == undefined, this will use default character height of 8 pixels
+            const charBytes = readCharBytes(charBuf, charHeight);
+            const size = 1;
+            const colour = {r:255,g:255,b:255};
+            const backgroundColour = {r:0,g:0,b:0};
+            // As charHeight == undefined, this will use default character height of 8 pixels
+            drawChar(charBytes, charHeight, size, colour, backgroundColour)
+            
+            //Assert
+            const bytesData = Ssd1351.__get__("bytesData");
+            hash.update(new Buffer(bytesData));
+            // hash is same as test using real font height as background colour is 0,0,0.
+            assert.equal(hash.digest('hex'), '1b6173e54b1d4857a5afe4a470fb0222e87a6c078f3813041f00dffa16c52728');
+        });
+    });
+    
     describe("writeString", function () {
         it("Check that the pixels are correctly displayed (size 1)", function () {
             //Prepare
@@ -1353,7 +1456,7 @@ describe('Ssd1351', function () {
             //Assert
             const bytesData = Ssd1351.__get__("bytesData");
             hash.update(new Buffer(bytesData));
-            assert.equal(hash.digest('hex'), 'cb50c201dddd94d5e2b73ec96770ee4108feeec01bc5ddc449a394f0d14e319f');
+            assert.equal(hash.digest('hex'), '2d060c519ee494dc9ba502ae91f81c62ae2abc6c1e19713bbfe9ab6b966e42f3');
         });
     });
 });
