@@ -2,7 +2,7 @@
 
 ## [Unreleased](https://gitlab.com/ftmazzone/ssd1351/)
 
-[Full Changelog](https://gitlab.com/ftmazzone/ssd1351/-/compare/1b3dc4fe4a97b100ef3d70bcbc743ad372c120c5...feat%2Fcreate-new-major-version?from_project_id=7310331)
+[Full Changelog](https://gitlab.com/ftmazzone/ssd1351/-/compare/v2.0.0...master?from_project_id=7310331)
 
 **Fixed bugs:**
 
