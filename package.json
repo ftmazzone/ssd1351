@@ -1,5 +1,5 @@
 {
-    "version": "1.0.5",
+    "version": "2.0.0",
     "license": "MIT",
     "name": "ssd1351",
     "author": {
@@ -30,7 +30,7 @@
         "test": "npx mocha '**/unitTests/*.js'"
     },
     "engines": {
-        "node": ">=12.0.0 <13.0.0"
+        "node": ">=14.0.0 <16.0.0"
     },
     "files": [
         "fonts/",

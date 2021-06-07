@@ -119,6 +119,49 @@ await ssd1351.drawLine(0, 0, 127, 127); // Draws a white line from the top left 
 await ssd1351.drawLine(0, 0, 127, 127,Ssd1351.convertHexColourToRgb('#FF530D')); // Draws a red line from the top left corner of the screen to the bottom right.
 ```
 
+### drawCircle
+
+Draws a circle with the specified colour and saves it in the application memory buffer.  
+__Remark__ : This method only writes the string in the application buffer. Use [updateScreen](#updatescreen) to update the oled display content.
+
+Usage:
+```javascript
+ssd1351.drawCircle(63, 63, 63); // Draws a white circle.
+ssd1351.drawCircle(63, 63, 63, Ssd1351.convertHexColourToRgb('#FF530D')); // Draws a red circle.
+```
+
+### fillCircle
+
+Fills the interior of a circle with the specified colour and saves it in the application memory buffer.  
+__Remark__ : This method only writes the string in the application buffer. Use [updateScreen](#updatescreen) to update the oled display content.
+
+Usage:
+```javascript
+ssd1351.fillCircle(63, 63, 32); // Colours in white the interior of the circle.
+ssd1351.fillCircle(63, 63, 32, Ssd1351.convertHexColourToRgb('#FF530D')); // Colours in red the interior of the circle.
+```
+
+### drawRectangle
+
+Draws a rectangle with the specified colour and saves it in the application memory buffer.  
+__Remark__ : This method only writes the string in the application buffer. Use [updateScreen](#updatescreen) to update the oled display content.
+
+Usage:
+```javascript
+ssd1351.drawRectangle(32, 32, 64, 64); // Draws the white borders of the rectangle.
+ssd1351.drawRectangle(32, 32, 64, 64, Ssd1351.convertHexColourToRgb('#FF530D')); // Draws the red borders of the rectangle.
+```
+
+### fillRectangle
+
+Fills the interior of a rectangle with the specified colour and saves it in the application memory buffer.  
+__Remark__ : This method only writes the string in the application buffer. Use [updateScreen](#updatescreen) to update the oled display content.
+
+Usage:
+```javascript
+ssd1351.fillRectangle(48, 48, 32, 32); // Colours in white the interior of the rectangle.
+ssd1351.fillRectangle(48, 48, 32, 32,Ssd1351.convertHexColourToRgb('#FF530D')); // Colours in red the interior of the rectangle.
+```
 
 ### getCursor
 
@@ -176,7 +219,7 @@ Writes the application buffer to the oled GDDRAM (Graphic Display Data RAM). Cal
 
 Usage:
 ```javascript
-await ssd1351.writeString(oledFont5x7, 4, '12:12', { r: 255, g: 255, b: 255 }); // Writes in white the string 12:12 with the pixel font 'oledFont5x7', the character size '4'
+await ssd1351.updateScreen(); // The display is refreshed
 ```
 
 ### writeString
@@ -186,6 +229,7 @@ __Remark__ : This method only writes the string in the application buffer. Use [
 
 Usage:
 ```javascript
+await ssd1351.writeString(oledFont5x7, 4, '12:12', { r: 255, g: 255, b: 255 }); // Writes in white the string 12:12 with the pixel font 'oledFont5x7', the character size '4'
 await ssd1351.writeString(oledFont5x7, 4, '12:12', { r: 255, g: 255, b: 255 },undefined,undefined,{ r: 128, g: 128 , b: 128 }); // Writes in white the string 12:12 with the pixel font 'oledFont5x7', the character size '4'.
 ```
 
