@@ -11,9 +11,9 @@
 **Merged pull requests:**
 
 
-## [2.0.0](https://gitlab.com/ftmazzone/ssd1351/-/tree/feat/create-new-major-version)
+## [2.0.0](https://gitlab.com/ftmazzone/ssd1351/-/tags/v2.0.0)
 
-[Full Changelog](https://gitlab.com/ftmazzone/ssd1351/-/compare/1b3dc4fe4a97b100ef3d70bcbc743ad372c120c5...feat%2Fcreate-new-major-version?from_project_id=7310331)
+[Full Changelog](https://gitlab.com/ftmazzone/ssd1351/-/compare/1b3dc4fe4a97b100ef3d70bcbc743ad372c120c5...v2.0.0?from_project_id=7310331)
 
 **Fixed bugs:**
 
