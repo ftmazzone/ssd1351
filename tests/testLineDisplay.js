@@ -20,12 +20,6 @@ async function test() {
 			await ssd1351.updateScreen();
 
 			await new Promise(resolve => setTimeout(resolve, 10000));
-
-			ssd1351.clearDisplay();
-			ssd1351.drawRectangle(0, 0, 128, 64, Ssd1351.convertHexColourToRgb('#FF530D'));
-			await ssd1351.updateScreen();
-
-			await new Promise(resolve => setTimeout(resolve, 10000));
 		}
 		await ssd1351.turnOffDisplay();
 	} catch (err) {
