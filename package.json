@@ -1,5 +1,5 @@
 {
-    "version": "2.0.0",
+    "version": "2.0.1",
     "license": "MIT",
     "name": "ssd1351",
     "author": {
@@ -20,9 +20,9 @@
         "canvas": "^2.8.0",
         "chai": "^4.3.4",
         "jimp": "^0.16.1",
-        "mocha": "^8.4.0",
+        "mocha": "^9.0.0",
         "nyc": "^15.1.0",
-        "rewire": "^5.0.0",
+        "rewire": "^6.0.0",
         "weather-icons": "^1.3.2"
     },
     "scripts": {
@@ -30,7 +30,7 @@
         "test": "npx mocha '**/unitTests/*.js'"
     },
     "engines": {
-        "node": ">=14.0.0 <16.0.0"
+        "node": ">=16.0.0 <17.0.0"
     },
     "files": [
         "fonts/",
