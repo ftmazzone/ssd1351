@@ -1,0 +1,56 @@
+name: Construction du programme lire-ejp
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  schedule:
+    - cron: '0 0 15 * *'
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_HOME: /cache/cargo
+  BRANCHE_GIT: ${{ github.head_ref || github.ref_name }}
+jobs:
+  build-armv6:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # if: github.ref == 'refs/heads/master'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Prepare the ARMv6 cross compile
+        run: |
+          sudo apt-get install gcc-arm-linux-gnueabihf wget libssl-dev pkg-config make perl -y
+          git clone https://github.com/abhiTronix/raspberry-pi-cross-compilers.git && \
+          wget https://sourceforge.net/projects/raspberry-pi-cross-compilers/files/Raspberry%20Pi%20GCC%20Cross-Compiler%20Toolchains/Bullseye/GCC%2010.3.0/Raspberry%20Pi%201%2C%20Zero/cross-gcc-10.3.0-pi_0-1.tar.gz/download -O cross-gcc-10.3.0-pi_0-1.tar.gz && \
+          tar -xf cross-gcc-10.3.0-pi_0-1.tar.gz
+          rm cross-gcc-10.3.0-pi_0-1.tar.gz
+      - name: Get cached rust registry
+        id: registry-cargo
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CARGO_HOME }}
+          key: ${{ runner.os }}-${{ hashFiles('Cargo.lock') }}-registry-Cargo.lock
+          restore-keys: |
+            ${{ runner.os }}-registry-Cargo.lock
+      - name: Get cached rust compilation results
+        id: target-cargo
+        uses: actions/cache@v3
+        with:
+          path: ./target
+          key: ${{ runner.os }}-${{ hashFiles('Cargo.lock') }}-target-Cargo.lock
+          restore-keys: |
+            ${{ runner.os }}-target-Cargo.lock
+      - name: Build the application
+        run:  |
+          rustup --version
+          cargo --version
+          cargo build --release --target arm-unknown-linux-gnueabihf -p lire_temperature
+      - uses: actions/upload-artifact@v3
+        with:
+          name: lire-ejp
+          path: ./target/x86_64-unknown-linux-musl/release/lire-ejp
+          retention-days: 1
+          if-no-files-found: error
+  
